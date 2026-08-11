@@ -1,4 +1,4 @@
-const apiKey = "4c3c823c7c2d967106d950012cfcaefd";
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 const cityInput = document.getElementById("cityInput");
 const searchButton = document.getElementById("searchButton");
 const temperature = document.querySelector(".temperature");
@@ -28,27 +28,30 @@ async function getWeather(cityName) {
     humidity.innerHTML = data.main.humidity + "%";
     wind.innerHTML = data.wind.speed + " km/h";
 
-    if (data.weather[0].main === "Clouds") {
-        weatherIcon.src = "images/cloud.png";
-    }
-    else if (data.weather[0].main === "Clear") {
-        weatherIcon.src = "images/clear.png";
-    }
-    else if (data.weather[0].main === "Rain") {
-        weatherIcon.src = "images/heavy-rain.png";
-    }
-    else {
-        weatherIcon.src = "images/weather.png";
-    }
+    const weatherCondition = data.weather[0].main;
+
+    const icons = {
+        Clouds: "images/cloud.png",
+        Clear: "images/clear.png",
+        Rain: "images/heavy-rain.png",
+
+    };
+
+    weatherIcon.src = icons[weatherCondition];
 }
 
-searchButton.addEventListener("click", function () {
-    const cityName = cityInput.value;
-    getWeather(cityName);
-});
-cityInput.addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-        getWeather(cityInput.value);
+function searchWeather() {
+    const cityName = cityInput.value.trim();
+    if (cityName === "") {
+        alert("Please enter a city name");
+        return;
     }
 
+    getWeather(cityName);
+}
+searchButton.addEventListener("click", searchWeather);
+cityInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        searchWeather();
+    }
 });
