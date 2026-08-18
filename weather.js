@@ -11,24 +11,27 @@ const maximumTemp = document.querySelector(".maximum-temp");
 const minimumTemp = document.querySelector(".minimum-temp");
 
 async function getWeather(cityName) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiKey}`;
+    //async: makes a funtion to return a promise and lets u use await inside it
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiKey}`;//creating the weather API url using the city name
     const response = await fetch(url);
-    if (response.status == 404) {
+    //fetch: send a request to the weather Api and wait for it to respond.
+    // await: wait for promise to finish then give result
+    if (response.status == 404) {//check if city found or not
         alert("City not found!");
         return;
     }
-    const data = await response.json();
+    const data = await response.json();//convert api response into JSON data
     console.log(data);
 
-    temperature.innerHTML = Math.round(data.main.temp) + "&deg;C";
-    city.innerHTML = data.name;
-    description.innerHTML = data.weather[0].main;
+    temperature.innerHTML = Math.round(data.main.temp) + "&deg;C";//get the current temperature,rounds it and display it in celcius
+    city.innerHTML = data.name;//get the city name from api and displays it
+    description.innerHTML = data.weather[0].main;//gets the main weather condition ani display it
     maximumTemp.innerHTML = "H:" + Math.round(data.main.temp_max) + "&deg;C";
     minimumTemp.innerHTML = "L:" + Math.round(data.main.temp_min) + "&deg;C";
     humidity.innerHTML = data.main.humidity + "%";
     wind.innerHTML = data.wind.speed + " km/h";
 
-    const weatherCondition = data.weather[0].main;
+    const weatherCondition = data.weather[0].main;//store the current weather condition like clouds,clear or rainy
 
     const icons = {
         Clouds: "images/cloud.png",
